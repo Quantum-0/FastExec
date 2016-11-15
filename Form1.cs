@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,7 +78,7 @@ namespace Fast_Exec
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (listBox.SelectedItem != null)
+            if (listBox.SelectedItem == null)
                 return;
 
             var index = listBox.SelectedIndex;
@@ -87,6 +88,22 @@ namespace Fast_Exec
                 Program.Execs[index] = fe.Current;
                 UpdateList();
             }
+        }
+
+        private void listBox_DragDrop(object sender, DragEventArgs e)
+        {
+            var ff = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string f in ff)
+            {
+                var n = Path.GetFileNameWithoutExtension(f);
+                Program.Execs.Add(new Exec() { Name = n, ExecPath = f, Key = '\0' });
+            }
+            UpdateList();
+        }
+
+        private void listBox_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Link;
         }
     }
 }

@@ -168,20 +168,25 @@
             this.textBoxApplication.Name = "textBoxApplication";
             this.textBoxApplication.Size = new System.Drawing.Size(100, 20);
             this.textBoxApplication.TabIndex = 12;
+            this.textBoxApplication.TextChanged += new System.EventHandler(this.ExecuteChanged);
             // 
             // textBoxFolder
             // 
+            this.textBoxFolder.Enabled = false;
             this.textBoxFolder.Location = new System.Drawing.Point(107, 125);
             this.textBoxFolder.Name = "textBoxFolder";
             this.textBoxFolder.Size = new System.Drawing.Size(100, 20);
             this.textBoxFolder.TabIndex = 13;
+            this.textBoxFolder.TextChanged += new System.EventHandler(this.ExecuteChanged);
             // 
             // textBoxLink
             // 
+            this.textBoxLink.Enabled = false;
             this.textBoxLink.Location = new System.Drawing.Point(107, 148);
             this.textBoxLink.Name = "textBoxLink";
             this.textBoxLink.Size = new System.Drawing.Size(165, 20);
             this.textBoxLink.TabIndex = 14;
+            this.textBoxLink.TextChanged += new System.EventHandler(this.ExecuteChanged);
             // 
             // openFileDialog
             // 

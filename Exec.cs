@@ -10,11 +10,12 @@ namespace Fast_Exec
     {
         public string Name { get; set; }
         public string ExecPath { get; set; }
+        public string ExecArgs { get; set; }
         public char Key { get; set; }
 
         public override string ToString()
         {
-            return "<" + Key + "> | " + Name;
+            return "<" + ((Key == '\0') ? "Не указано" : Key.ToString()) + "> | " + Name;
         }
     }
 }

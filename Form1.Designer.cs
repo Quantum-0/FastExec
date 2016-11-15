@@ -38,11 +38,14 @@
             // 
             // listBox
             // 
+            this.listBox.AllowDrop = true;
             this.listBox.FormattingEnabled = true;
             this.listBox.Location = new System.Drawing.Point(12, 12);
             this.listBox.Name = "listBox";
             this.listBox.Size = new System.Drawing.Size(467, 147);
             this.listBox.TabIndex = 0;
+            this.listBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox_DragDrop);
+            this.listBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox_DragEnter);
             // 
             // button1
             // 
@@ -96,6 +99,7 @@
             // 
             // Form1
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(491, 196);

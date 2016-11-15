@@ -38,6 +38,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Pixel";
             this.Opacity = 0D;
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Pixel";
             this.ResumeLayout(false);
 

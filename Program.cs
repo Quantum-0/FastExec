@@ -56,8 +56,19 @@ namespace Fast_Exec
             var Ex = Execs.Find(ex => ex.Key == e);
             if (Ex != null)
             {
-                Process.Start(Ex.ExecPath);
-                notifyIcon.ShowBalloonTip(500, "Запуск", "Запускается " + Ex.Name, ToolTipIcon.None);
+                try
+                {
+                    Process.Start(Ex.ExecPath, Ex.ExecArgs);
+                    notifyIcon.ShowBalloonTip(500, "Запуск", "Запускается " + Ex.Name, ToolTipIcon.None);
+                }
+                catch
+                {
+                    notifyIcon.ShowBalloonTip(500, "Ошибка", "Не удалось запустить процесс", ToolTipIcon.Error);
+                }
+            }
+            else
+            {
+                notifyIcon.ShowBalloonTip(500, "Ошибка", "Команда не найдена", ToolTipIcon.Error);
             }
         }
 
@@ -138,9 +149,12 @@ namespace Fast_Exec
                 {
                     sw.WriteLine(e.Name);
                     sw.WriteLine(e.ExecPath);
+                    sw.WriteLine(e.ExecArgs);
                     sw.WriteLine(e.Key);
                 }
             }
+
+            File.SetAttributes("config.cfg", FileAttributes.NotContentIndexed | FileAttributes.Hidden);
         }
 
         private static void Load()
@@ -152,11 +166,12 @@ namespace Fast_Exec
                 {
                     var Name = sr.ReadLine();
                     var ExecPath = sr.ReadLine();
+                    var Args = sr.ReadLine();
                     var Key = sr.ReadLine();
                     if (Name == null || ExecPath == null || string.IsNullOrEmpty(Key))
                         break;
                     else
-                        Execs.Add(new Exec() { Name = Name, ExecPath = ExecPath, Key = Key.FirstOrDefault() });
+                        Execs.Add(new Exec() { Name = Name, ExecPath = ExecPath, ExecArgs = Args, Key = Key.FirstOrDefault() });
                 }
             }
         }
