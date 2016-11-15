@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Fast_Exec
         static ContextMenuStrip contextMenuStrip;
         public static bool Working;
         private static KeyboardHooker kh;
+        static Pixel KeyBlocker;
 
         [STAThread]
         static void Main()
@@ -30,26 +32,46 @@ namespace Fast_Exec
                 if (e)
                 {
                     notifyIcon.ShowBalloonTip(1500, "Fast Exec", "Ожидание нажатия клавиши быстрого запуска", ToolTipIcon.Info);
-                    
+                    KeyBlocker.Visible = true;
+                    KeyBlocker.Activate();
                 }
                 else
+                {
                     notifyIcon.ShowBalloonTip(500, "Fast Exec", "Быстрый запуск отменён", ToolTipIcon.Info);
+                    KeyBlocker.Visible = false;
+                }
             };
             kh.ExecuteButtonPressed += Kh_ExecuteButtonPressed;
 
-                Application.Run();
-            Application.ApplicationExit += (s,e) => notifyIcon.Dispose();
+            Application.Run();
+            Application.ApplicationExit += (s, e) =>
+            {
+                notifyIcon.Dispose();
+            };
         }
 
         private static void Kh_ExecuteButtonPressed(object sender, char e)
         {
+
             var Ex = Execs.Find(ex => ex.Key == e);
-            Process.Start(Ex.ExecPath);
+            if (Ex != null)
+            {
+                Process.Start(Ex.ExecPath);
+                notifyIcon.ShowBalloonTip(500, "Запуск", "Запускается " + Ex.Name, ToolTipIcon.None);
+            }
         }
 
         static void Init()
         {
-            Execs = new List<Exec>();
+            KeyBlocker = new Pixel();
+            KeyBlocker.Show();
+            KeyBlocker.Visible = false;
+
+            if (File.Exists("config.cfg"))
+                Load();
+            else
+                Execs = new List<Exec>();
+
             notifyIcon = new NotifyIcon();
             contextMenuStrip = new ContextMenuStrip();
             contextMenuStrip.SuspendLayout();
@@ -77,7 +99,11 @@ namespace Fast_Exec
             toolStripMenuItem2.Click += ToolStripMenuItem2_Click;
             toolStripMenuItem3.Size = new System.Drawing.Size(159, 22);
             toolStripMenuItem3.Text = "Выход";
-            toolStripMenuItem3.Click += (s,e) => Application.Exit();
+            toolStripMenuItem3.Click += (s, e) =>
+            {
+                Save();
+                Application.Exit();
+            };
             contextMenuStrip.ResumeLayout(false);
 
             Working = true;
@@ -102,6 +128,37 @@ namespace Fast_Exec
         private static void ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             (new Form1()).Show();
+        }
+
+        internal static void Save()
+        {
+            using (StreamWriter sw = new StreamWriter("config.cfg"))
+            {
+                foreach (var e in Execs)
+                {
+                    sw.WriteLine(e.Name);
+                    sw.WriteLine(e.ExecPath);
+                    sw.WriteLine(e.Key);
+                }
+            }
+        }
+
+        private static void Load()
+        {
+            using (StreamReader sr = new StreamReader("config.cfg"))
+            {
+                Execs = new List<Exec>();
+                while (true)
+                {
+                    var Name = sr.ReadLine();
+                    var ExecPath = sr.ReadLine();
+                    var Key = sr.ReadLine();
+                    if (Name == null || ExecPath == null || string.IsNullOrEmpty(Key))
+                        break;
+                    else
+                        Execs.Add(new Exec() { Name = Name, ExecPath = ExecPath, Key = Key.FirstOrDefault() });
+                }
+            }
         }
     }
 }

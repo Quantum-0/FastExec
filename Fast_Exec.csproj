@@ -60,6 +60,12 @@
       <DependentUpon>FormEditing.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyboardHooker.cs" />
+    <Compile Include="Pixel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pixel.Designer.cs">
+      <DependentUpon>Pixel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -67,6 +73,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditing.resx">
       <DependentUpon>FormEditing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pixel.resx">
+      <DependentUpon>Pixel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

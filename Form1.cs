@@ -49,6 +49,7 @@ namespace Fast_Exec
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
+            Program.Save();
             Application.Exit();
         }
 
@@ -63,6 +64,28 @@ namespace Fast_Exec
             {
                 rkAutorun.DeleteValue(AutoRunName, false);
                 buttonAddToAutorun.Text = "Добавить в автозагрузку";
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (listBox.SelectedItem != null)
+                Program.Execs.RemoveAt(listBox.SelectedIndex);
+
+            UpdateList();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (listBox.SelectedItem != null)
+                return;
+
+            var index = listBox.SelectedIndex;
+            var fe = new FormEditing((Exec)listBox.SelectedItem);
+            if (fe.ShowDialog() == DialogResult.OK)
+            {
+                Program.Execs[index] = fe.Current;
+                UpdateList();
             }
         }
     }
